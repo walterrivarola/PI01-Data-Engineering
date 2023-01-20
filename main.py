@@ -37,7 +37,7 @@ def hello():
 @app.get("/get_word_count/{plataforma}/{word}")
 def get_word_count(plataforma, word):
     w = f"SELECT plataform, count(title) as quantity FROM df WHERE plataform='{plataforma}' AND title LIKE '%{word}%'"
-    return sqldf(w,  globals())
+    return sqldf(w,  globals()).to_dict()
 
 # En este caso creamos la ruta para poder buscar la cantidad de registros que tengan un mayor
 # puntaje y un año determinado. Todo esto será ingresado en la URL
@@ -45,19 +45,19 @@ def get_word_count(plataforma, word):
 
 @app.get('/get_score_count/{plataforma}/{puntuacion}/{anio}')
 def get_score_count(plataforma,puntuacion, anio):
-    p = f'SELECT plataform, score FROM df WHERE plataform="{plataforma}" AND type="movie" AND score={puntuacion} AND release_year={anio}'
-    return sqldf(p, globals())
+    p = f'SELECT plataform, COUNT(score) FROM df WHERE plataform="{plataforma}" AND type="movie" AND score={puntuacion} AND release_year={anio}'
+    return sqldf(p, globals()).to_dict()
 
 #Esta parte es para poder consultar la película que más duró según año, plataforma y tipo de duración
 
 @app.get('/get_longest/{plataforma}/{duration_type}/{anio}')
 def get_longest(plataforma, duration_type,anio):
     d = f'SELECT title, MAX(duration_int), duration_type FROM df WHERE plataform = "{plataforma}" AND release_year={anio} AND duration_type="{duration_type}"'
-    return sqldf(d, globals())
+    return sqldf(d, globals()).to_dict()
 
 
 #Y por ultimo tenemos esta ruta que nos mostrará la cantidad de series y películas que hay rating ingresado
 @app.get('/get_rating_count/{rating}')
 def get_rating_count(rating):
     r = f'SELECT COUNT(type), rating FROM df WHERE rating = "{rating}"'
-    return sqldf(r, globals())
+    return sqldf(r, globals()).to_dict()
