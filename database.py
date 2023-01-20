@@ -1,42 +1,14 @@
-from datetime import date
-from pydantic import BaseModel
+'''
+importamos la libería Deta para poder activar la conexión con nuestro servidor, luego
+importamos pandas para poder leer nuestro archivo que actualmente está ubicado en Github.
+
+Lo hacemos así ya que el servidor de Deta posee un limite de máximo 5.5mb por archivo.
+'''
 from deta import Deta
-import pandas
+import pandas as pd
 
-df = pandas.read_csv('./src/stream.csv')
-
+#Guardamos la url en una variable
+url = 'https://raw.githubusercontent.com/walterrivarola/PI01-Data-Engineering/main/src/stream.csv'
+df = pd.read_csv(url) #leemos el archivo csv desde la variable generada.
 
 deta = Deta() # configure your Deta project
-db = deta.Base('Engineering')  # access your DB
-
-class Stream(BaseModel):
-    id: str
-    type: str
-    title: str
-    director: str
-    cast: str
-    country: str
-    date_added: date
-    release_year: int
-    rating: str
-    listed_in: str
-    description: str
-    score: int
-    duration_int: int
-    duration_type: str
-
-class UpdateStream(BaseModel):
-    id: str = None
-    type: str = None
-    title: str = None
-    director: str = None
-    cast: str = None
-    country: str = None
-    date_added: date = None
-    release_year: int = None
-    rating: str = None
-    listed_in: str = None
-    description: str = None
-    score: int = None
-    duration_int: int = None
-    duration_type: str = None
